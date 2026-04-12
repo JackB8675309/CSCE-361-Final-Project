@@ -1,0 +1,64 @@
+.sale-page {
+    max-width: 1300px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.sale-page__hero {
+    background: black;
+    color: white;
+    padding: 40px 50px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sale-page__hero h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    font-style: italic;
+}
+
+.sale-page__hero p {
+    font-size: 1rem;
+    color: #aaa;
+    margin-top: 10px;
+}
+
+.sale-badge-big {
+    background: red;
+    color: white;
+    font-size: 2rem;
+    font-weight: 900;
+    padding: 20px 30px;
+}
+
+.sale-section {
+    margin-bottom: 50px;
+}
+
+.sale-section__title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.sale-section__meta {
+    font-size: 13px;
+    color: #767677;
+    margin-bottom: 20px;
+}
+
+.sale-section__meta span {
+    color: red;
+    font-weight: bold;
+}
+
+.sale-grid {
+    display: flex;
+    gap: 25px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 15px;
+}
