@@ -1,7 +1,7 @@
 public class Category{
-    private int categoryID {get; set;}
-    private string name {get; set;}
-    private List<Product> products {get; set;}
+    public int categoryID {get; set;}
+    public string name {get; set;}
+    public List<Product> products {get; set;}
 
     public Category(int categoryID, string name) {
         this.categoryID = categoryID;

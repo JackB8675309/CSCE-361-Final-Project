@@ -1,12 +1,12 @@
 public class Order {
-    private int orderID {get; set;}
-    private int userID {get; set;}
-    private List<Product> products {get; set;}
-    private double total {get; set;}
-    private int quantity {get; set;}
-    private DateTime orderDate {get; set;}
-    private string shippingDetails {get; set;}
-    private string paymentDetails {get; set;}
+    public int orderID {get; set;}
+    public int userID {get; set;}
+    public List<Product> products {get; set;}
+    public double total {get; set;}
+    public int quantity {get; set;}
+    public DateTime orderDate {get; set;}
+    public string shippingDetails {get; set;}
+    public string paymentDetails {get; set;}
 
     public Order(int orderID, int userID, List<Product> products, double total, int quantity, DateTime orderDate, string shippingDetails, string paymentDetails) {
         this.orderID = orderID;
