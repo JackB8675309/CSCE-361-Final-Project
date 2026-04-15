@@ -4,8 +4,8 @@ public class DatabaseConnection {
     private string connectionString;
 
     public DatabaseConnection() {
-        //this.connectionString = "";
-        // https://learn.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnection?view=dotnet-plat-ext-9.0
+        //TODO: Update to the real thing later
+        this.connectionString = "Data Source=GBLAPTOP\SQLEXPRESS;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False;Application Name="Microsoft SQL Server Management Studio - Query";Command Timeout=2147483647";
     }
 
     public SqlConnection OpenConnection() {

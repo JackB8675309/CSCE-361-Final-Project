@@ -11,14 +11,45 @@ public class Users {
         this.password = password;
     }
 
-    public void login(string email, string password){
+    /*
+    * Information to create this was sourced from:
+    * https://learn.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlcommand.executescalar?view=netframework-4.8.1
+    */
+    public bool login(String email, String password){
+        string query = "SELECT userID from Users where email = @Email AND password = @Password";
 
+        try {
+            using (DatabaseConnection database = new DatabaseConnection()){
+                using (SqlCommand command = new SqlCommand(query, database.OpenConnection())){
+                    command.Parameters.AddWithValue("@Email", email);
+                    command.Parameters.AddWithValue("@Password", password);
+                    
+                    object result = command.ExecuteScalar();
+
+                    if (result != null){
+                        this.userID = Convert.ToInt32(result);
+                        this.email = email;
+                        this.password = password;
+                        return true;
+                    }
+                }
+            }
+        }
+        catch (SqlException e){
+            Console.WriteLine(e.Message);
+        }
+        return false;
     }
 
-/*
-https://dev.to/clover_luo/building-a-user-registration-system-in-net-core-c-ogg
-*/
-    public void createAccount(string email, string password){
-        
+
+    public void createAccount(String email, String password){
+        string query = "INSERT INTO users (email, password) VALUES (@Email, @Password)";
+        using (DatabaseConnection db = new DatabaseConnection()){
+            using (SqlCommand command = new SqlCommand(query, db.OpenConnection())){
+                command.Parameters.AddWithValue("@Email", email);
+                command.Parameters.AddWithValue("@Password", password);
+                command.ExecuteNonQuery();
+            }
+        }
     }
 }

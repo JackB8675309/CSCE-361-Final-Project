@@ -39,9 +39,9 @@ CREATE Table Sale (
 	saleID int IDENTITY(1,1) PRIMARY KEY,
 	startDate DATETIME NOT NULL,
 	endDATE DATETIME NOT NULL,
-	amount decimal(10, 2) NOT NULL,
-	categoryID int NOT NULL,
-	productID int NOT NULL,
+	discountAmount decimal(10, 2) NOT NULL,
+	categoryID int,
+	productID int,
 	FOREIGN KEY (categoryID) references category(categoryID),
 	FOREIGN KEY (productID) references product(productID)
 );
@@ -53,4 +53,14 @@ CREATE Table Orders (
 	orderDate DATETIME NOT NULL,
 	shippingDetails varchar(255) NOT NULL,
 	FOREIGN KEY (userID) references users(userID)
+);
+
+CREATE Table OrderItems (
+	orderItemID int IDENTITY(1,1) PRIMARY KEY,
+	orderID int NOT NULL,
+	productID int NOT NULL,
+	quantity int NOT NULL,
+	price decimal(10, 2) NOT NULL,
+	FOREIGN KEY (orderID) references Orders(orderID),
+	FOREIGN KEY (productID) references product(productID)
 );
