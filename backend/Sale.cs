@@ -13,6 +13,5 @@ public class Sale {
         this.discountPercentage = discountPercentage;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.categoryID = categoryID;
     }
 }
