@@ -26,7 +26,8 @@ public class Order {
     public void placeOrder(){
         using (DatabaseConnection database = new DatabaseConnection()){
             SqlConnection conn = database.OpenConnection();
-            string orderQuery = "INSERT INTO Orders (userID, total, orderDate, shippingDetails) OUTPUT INSERTED.orderID VALUES (@userID, @total, @orderDate, @shippingDetails)";
+            try {
+                string orderQuery = "INSERT INTO Orders (userID, total, orderDate, shippingDetails) OUTPUT INSERTED.orderID VALUES (@userID, @total, @orderDate, @shippingDetails)";
             using (SqlCommand command = new SqlCommand(orderQuery, conn)){
                 command.Parameters.AddWithValue("@userID", this.userID);
                 command.Parameters.AddWithValue("@total", this.total);
@@ -44,6 +45,10 @@ public class Order {
                     command.Parameters.AddWithValue("@price", product.price);
                     command.ExecuteNonQuery();
                 }
+            }
+                }
+            } catch (SqlException e) {
+                Console.WriteLine(e.Message);
             }
 
         }
