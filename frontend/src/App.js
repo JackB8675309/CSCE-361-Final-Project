@@ -19,7 +19,7 @@ export default function App() {
 
   useEffect(() => {
     if (currentUserId) {
-      fetch(`http://localhost:5000/Cart/${currentUserId}`)
+      fetch('http://localhost:5000/Cart', { credentials: 'include' })
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data)) setCartItems(data);
@@ -39,8 +39,8 @@ export default function App() {
     fetch('http://localhost:5000/Cart/update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({
-        userId: parseInt(currentUserId),
         productId: productId,
         quantity: quantity
       })
@@ -92,7 +92,7 @@ export default function App() {
 
   const clearCart = () => {
     if (currentUserId) {
-      fetch(`http://localhost:5000/Cart/clear/${currentUserId}`, { method: 'DELETE' }).catch(console.error);
+      fetch('http://localhost:5000/Cart/clear', { method: 'DELETE', credentials: 'include' }).catch(console.error);
     }
     setCartItems([]);
   };

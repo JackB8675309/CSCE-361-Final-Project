@@ -12,25 +12,24 @@ public class CartItemDto {
     public int quantity { get; set; }
 }
 
-public class CartRequest {
-    public int userId { get; set; }
-    public int productId { get; set; }
-    public int quantity { get; set; }
-}
 
 [ApiController]
 [Route("[controller]")]
 public class CartController : ControllerBase {
 
-    [HttpGet("{userId}")]
-    public ActionResult GetCart(int userId) {
+    [HttpGet]
+    public ActionResult GetCart() {
+        int? userId = HttpContext.Session.GetInt32("userId");
+        if (userId == null) {
+            return Unauthorized(new { message = "User is not logged in" });
+        }
         List<CartItemDto> items = new List<CartItemDto>();
         try {
             using (DatabaseConnection database = new DatabaseConnection()) {
                 SqlConnection conn = database.OpenConnection();
                 string query = @"
                     SELECT c.productID, c.quantity, p.sku, p.name, p.price, p.imageUrl,
-                      (SELECT TOP 1 discountAmount FROM Sale s WHERE (s.productID = p.productID OR s.categoryID = p.categoryID) AND s.startDate <= GETDATE() AND s.endDate >= GETDATE() ORDER BY discountAmount DESC) as discount
+                      (SELECT TOP 1 COALESCE(discountAmount, p.price * (discountPercentage / 100.0)) FROM Sale s WHERE (s.productID = p.productID OR s.categoryID = p.categoryID) AND s.startDate <= GETDATE() AND s.endDate >= GETDATE() ORDER BY COALESCE(discountAmount, p.price * (discountPercentage / 100.0)) DESC) as discount
                     FROM cart c
                     JOIN product p ON c.productID = p.productID
                     WHERE c.userID = @userId";
@@ -68,13 +67,17 @@ public class CartController : ControllerBase {
 
     [HttpPost("update")]
     public ActionResult UpdateCartRow([FromBody] CartRequest request) {
+        int? sessionUserId = HttpContext.Session.GetInt32("userId");
+        if (sessionUserId == null) return Unauthorized(new { message = "User is not logged in" });
+        int userId = sessionUserId.Value;
+
         try {
             using (DatabaseConnection database = new DatabaseConnection()) {
                 SqlConnection conn = database.OpenConnection();
                 
                 string checkQuery = "SELECT quantity FROM cart WHERE userID = @userId AND productID = @productId";
                 using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn)) {
-                    checkCmd.Parameters.Add("@userId", System.Data.SqlDbType.Int).Value = request.userId;
+                    checkCmd.Parameters.Add("@userId", System.Data.SqlDbType.Int).Value = userId;
                     checkCmd.Parameters.Add("@productId", System.Data.SqlDbType.Int).Value = request.productId;
                     object result = checkCmd.ExecuteScalar();
 
@@ -83,7 +86,7 @@ public class CartController : ControllerBase {
                         if (request.quantity > 0) {
                             string updateQuery = "UPDATE cart SET quantity = @qty WHERE userID = @userId AND productID = @productId";
                             using (SqlCommand updateCmd = new SqlCommand(updateQuery, conn)) {
-                                updateCmd.Parameters.Add("@userId", System.Data.SqlDbType.Int).Value = request.userId;
+                                updateCmd.Parameters.Add("@userId", System.Data.SqlDbType.Int).Value = userId;
                                 updateCmd.Parameters.Add("@productId", System.Data.SqlDbType.Int).Value = request.productId;
                                 updateCmd.Parameters.Add("@qty", System.Data.SqlDbType.Int).Value = request.quantity;
                                 updateCmd.ExecuteNonQuery();
@@ -92,7 +95,7 @@ public class CartController : ControllerBase {
                             // If quantity is 0, remove it from DB
                             string deleteQuery = "DELETE FROM cart WHERE userID = @userId AND productID = @productId";
                             using (SqlCommand delCmd = new SqlCommand(deleteQuery, conn)) {
-                                delCmd.Parameters.Add("@userId", System.Data.SqlDbType.Int).Value = request.userId;
+                                delCmd.Parameters.Add("@userId", System.Data.SqlDbType.Int).Value = userId;
                                 delCmd.Parameters.Add("@productId", System.Data.SqlDbType.Int).Value = request.productId;
                                 delCmd.ExecuteNonQuery();
                             }
@@ -102,7 +105,7 @@ public class CartController : ControllerBase {
                         if (request.quantity > 0) {
                             string insertQuery = "INSERT INTO cart (userID, productID, quantity) VALUES (@userId, @productId, @qty)";
                             using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn)) {
-                                insertCmd.Parameters.Add("@userId", System.Data.SqlDbType.Int).Value = request.userId;
+                                insertCmd.Parameters.Add("@userId", System.Data.SqlDbType.Int).Value = userId;
                                 insertCmd.Parameters.Add("@productId", System.Data.SqlDbType.Int).Value = request.productId;
                                 insertCmd.Parameters.Add("@qty", System.Data.SqlDbType.Int).Value = request.quantity;
                                 insertCmd.ExecuteNonQuery();
@@ -117,8 +120,12 @@ public class CartController : ControllerBase {
         }
     }
 
-    [HttpDelete("clear/{userId}")]
-    public ActionResult ClearCart(int userId) {
+    [HttpDelete("clear")]
+    public ActionResult ClearCart() {
+        int? sessionUserId = HttpContext.Session.GetInt32("userId");
+        if (sessionUserId == null) return Unauthorized(new { message = "User is not logged in" });
+        int userId = sessionUserId.Value;
+
         try {
             using (DatabaseConnection database = new DatabaseConnection()) {
                 SqlConnection conn = database.OpenConnection();

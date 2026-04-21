@@ -14,9 +14,7 @@ export default function CheckoutPage({ setPage, clearCart }) {
   const handleCheckoutSubmit = async (event) => {
     event.preventDefault();
 
-    const currentUserId = 1;
     const checkoutPayLoad = {
-      userId: currentUserId,
       shippingDetails: JSON.stringify({
         addressLine1: address,
         addressLine2: "",
@@ -39,6 +37,7 @@ export default function CheckoutPage({ setPage, clearCart }) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(checkoutPayLoad),
       });
 
