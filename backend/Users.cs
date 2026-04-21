@@ -21,8 +21,8 @@ public class Users {
         try {
             using (DatabaseConnection database = new DatabaseConnection()){
                 using (SqlCommand command = new SqlCommand(query, database.OpenConnection())){
-                    command.Parameters.AddWithValue("@Email", email);
-                    command.Parameters.AddWithValue("@Password", password);
+                    command.Parameters.Add("@Email", System.Data.SqlDbType.VarChar, 255).Value = email;
+                    command.Parameters.Add("@Password", System.Data.SqlDbType.VarChar, 255).Value = password;
                     
                     object result = command.ExecuteScalar();
 
@@ -46,8 +46,8 @@ public class Users {
         string query = "INSERT INTO users (email, password) VALUES (@Email, @Password)";
         using (DatabaseConnection db = new DatabaseConnection()){
             using (SqlCommand command = new SqlCommand(query, db.OpenConnection())){
-                command.Parameters.AddWithValue("@Email", email);
-                command.Parameters.AddWithValue("@Password", password);
+                command.Parameters.Add("@Email", System.Data.SqlDbType.VarChar, 255).Value = email;
+                command.Parameters.Add("@Password", System.Data.SqlDbType.VarChar, 255).Value = password;
                 command.ExecuteNonQuery();
             }
         }

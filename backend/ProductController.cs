@@ -36,7 +36,7 @@ public class ProductController : ControllerBase {
                 SqlConnection conn = database.OpenConnection();
                 string query = "SELECT * FROM product WHERE categoryID = @categoryID";
                 using (SqlCommand command = new SqlCommand(query, conn)) {
-                    command.Parameters.AddWithValue("@categoryID", categoryID);
+                    command.Parameters.Add("@categoryID", System.Data.SqlDbType.Int).Value = categoryID;
                     using (SqlDataReader reader = command.ExecuteReader()) {
                         while (reader.Read()) {
                             products.Add(BuildProduct(reader));

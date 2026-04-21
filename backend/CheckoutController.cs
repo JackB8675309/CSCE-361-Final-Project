@@ -49,7 +49,7 @@ public class CheckoutController : Controller {
             SqlConnection conn = database.OpenConnection();
             string query = @"SELECT c.quantity, p.productID, p.name, p.price, p.description, p.weight, p.dimensions, p.manufacturer, p.rating, p.sku, p.categoryID, p.imageUrl FROM cart c JOIN product p ON c.productID = p.productID WHERE c.userID = @userID";
             using (SqlCommand command = new SqlCommand(query, conn)){
-                command.Parameters.AddWithValue("@userID", userId);
+                command.Parameters.Add("@userID", System.Data.SqlDbType.Int).Value = userId;
                 using (SqlDataReader reader = command.ExecuteReader()){
                     while(reader.Read()){
                             string description = reader.GetString(reader.GetOrdinal("description"));
@@ -83,7 +83,7 @@ public class CheckoutController : Controller {
             SqlConnection conn = database.OpenConnection();
             string query = "DELETE FROM cart WHERE userID = @userID";
             using (SqlCommand command = new SqlCommand(query, conn)){
-                command.Parameters.AddWithValue("@userID", userId);
+                command.Parameters.Add("@userID", System.Data.SqlDbType.Int).Value = userId;
                 command.ExecuteNonQuery();
             }
         }

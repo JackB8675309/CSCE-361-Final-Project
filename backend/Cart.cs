@@ -17,13 +17,13 @@ public class Cart {
 
     public void AddItem(Product product) {
         products.Add(product);
-        total += product.price;
+        total += product.GetActivePrice();
         quantity++;
     }
 
     public void RemoveItem(Product product) {
         products.Remove(product);
-        total -= product.price;
+        total -= product.GetActivePrice();
         quantity--;
     }
 

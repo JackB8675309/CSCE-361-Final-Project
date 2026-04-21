@@ -29,20 +29,20 @@ public class Order {
             try {
                 string orderQuery = "INSERT INTO Orders (userID, total, orderDate, shippingDetails) OUTPUT INSERTED.orderID VALUES (@userID, @total, @orderDate, @shippingDetails)";
             using (SqlCommand command = new SqlCommand(orderQuery, conn)){
-                command.Parameters.AddWithValue("@userID", this.userID);
-                command.Parameters.AddWithValue("@total", this.total);
-                command.Parameters.AddWithValue("@orderDate", this.orderDate);
-                command.Parameters.AddWithValue("@shippingDetails", this.shippingDetails);
+                command.Parameters.Add("@userID", System.Data.SqlDbType.Int).Value = this.userID;
+                command.Parameters.Add("@total", System.Data.SqlDbType.Decimal).Value = this.total;
+                command.Parameters.Add("@orderDate", System.Data.SqlDbType.DateTime).Value = this.orderDate;
+                command.Parameters.Add("@shippingDetails", System.Data.SqlDbType.VarChar, 1000).Value = this.shippingDetails;
                 this.orderID = (int)command.ExecuteScalar();
             }
 
             foreach (Product product in this.products){
                 string itemQuery = "INSERT INTO OrderItems (orderID, productID, quantity, price) VALUES (@orderID, @productID, @quantity, @price)";
                 using (SqlCommand command = new SqlCommand(itemQuery, conn)){
-                    command.Parameters.AddWithValue("@orderID", this.orderID);
-                    command.Parameters.AddWithValue("@productID", product.productID);
-                    command.Parameters.AddWithValue("@quantity", 1);
-                    command.Parameters.AddWithValue("@price", product.price);
+                    command.Parameters.Add("@orderID", System.Data.SqlDbType.Int).Value = this.orderID;
+                    command.Parameters.Add("@productID", System.Data.SqlDbType.Int).Value = product.productID;
+                    command.Parameters.Add("@quantity", System.Data.SqlDbType.Int).Value = 1;
+                    command.Parameters.Add("@price", System.Data.SqlDbType.Decimal).Value = product.GetActivePrice();
                     command.ExecuteNonQuery();
                 }
             }
