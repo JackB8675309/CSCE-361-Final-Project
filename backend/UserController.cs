@@ -15,10 +15,17 @@ public class UserController : ControllerBase {
         Users userModel = new Users(0, "", "");
         bool loginSuccess = userModel.login(request.Email, request.Password);
         if (loginSuccess){
+            HttpContext.Session.SetInt32("userId", userModel.userID);
             return Ok(new { message = "Login successful", userId = userModel.userID, email = userModel.email });
         } else {
             return Unauthorized(new { message = "That username or password was incorrect" });
         }
+    }
+
+    [HttpPost("logout")]
+    public ActionResult Logout(){
+        HttpContext.Session.Clear();
+        return Ok(new { message = "Logged out successfully"});
     }
     
     [HttpPost("create-account")]

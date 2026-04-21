@@ -32,14 +32,15 @@ public class Product {
                 //    ORDER BY discountAmount DESC";'"
                 // The response was the query used below
                 string query = @"
-                    SELECT TOP 1 discountAmount 
+                    SELECT TOP 1 COALESCE(discountAmount, @price * (discountPercentage / 100.0)) 
                     FROM Sale 
                     WHERE (productID = @productID OR categoryID = @categoryID)
                       AND startDate <= GETDATE() AND endDate >= GETDATE()
-                    ORDER BY discountAmount DESC";
+                    ORDER BY COALESCE(discountAmount, @price * (discountPercentage / 100.0)) DESC";
                 using (SqlCommand command = new SqlCommand(query, conn)) {
                     command.Parameters.Add("@productID", System.Data.SqlDbType.Int).Value = this.productID;
                     command.Parameters.Add("@categoryID", System.Data.SqlDbType.Int).Value = this.details.categoryID;
+                    command.Parameters.Add("@price", System.Data.SqlDbType.Decimal).Value = this.price;
                     object result = command.ExecuteScalar();
                     if (result != null && result != DBNull.Value) {
                         double discount = Convert.ToDouble(result);

@@ -8,14 +8,18 @@ using System.Data.SqlClient;
 public class CheckoutController : Controller {
     [HttpPost]
     public ActionResult Checkout([FromBody] CheckoutRequest request) {
+        int? sessionUserId = HttpContext.Session.GetInt32("userId");
+        if (sessionUserId == null) return Unauthorized(new { success = false, error = "User is not logged in" });
+        int userId = sessionUserId.Value;
+
         try {
-            Cart userCart = RetrieveCartForUser(request.UserId);
+            Cart userCart = RetrieveCartForUser(userId);
             if (userCart == null || userCart.products.Count == 0) {
                 return BadRequest("Cart Is Empty.");
             }
 
             Order newOrder = userCart.Checkout(request.ShippingDetails, request.PaymentDetails);
-            ClearUserCartInDatabase(request.UserId);
+            ClearUserCartInDatabase(userId);
 
             //The below line of code was written using Gemini 3.1 Pro on Google's AntiGravity
             // The prompt was "does this class work with the react frontend?"
