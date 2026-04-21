@@ -120,4 +120,30 @@ public class ProductController : ControllerBase {
             return BadRequest(new { message = "Database error", error = e.Message });
         }
     }
+
+    [HttpGet("search")]
+    public ActionResult SearchProducts([FromQuery] string q) {
+        List<Product> products = new List<Product>();
+        if (string.IsNullOrWhiteSpace(q)) {
+            return Ok(products);
+        }
+
+        try {
+            using (DatabaseConnection database = new DatabaseConnection()) {
+                SqlConnection conn = database.OpenConnection();
+                string query = "SELECT * FROM product WHERE name LIKE @query OR description LIKE @query";
+                using (SqlCommand command = new SqlCommand(query, conn)) {
+                    command.Parameters.Add("@query", System.Data.SqlDbType.NVarChar).Value = "%" + q + "%";
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        while (reader.Read()) {
+                            products.Add(BuildProduct(reader));
+                        }
+                    }
+                }
+            }
+            return Ok(products);
+        } catch (SqlException e) {
+            return BadRequest(new { message = "Database error", error = e.Message });
+        }
+    }
 }

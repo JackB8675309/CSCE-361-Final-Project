@@ -1,6 +1,16 @@
+import { useState } from 'react';
 import '../styles/global.css';
 
-export default function Header({ page, setPage, cartCount }) {
+export default function Header({ page, setPage, cartCount, setSearchQuery }) {
+  const [localQuery, setLocalQuery] = useState('');
+
+  const handleSearch = () => {
+    if (localQuery.trim()) {
+      setSearchQuery(localQuery);
+      setPage('search');
+    }
+  };
+
   return (
     <header className="header">
       <div className="header__top-bar">
@@ -8,7 +18,7 @@ export default function Header({ page, setPage, cartCount }) {
       </div>
       <nav className="header__navbar">
         <div className="header__logo">
-          <span style={{ fontWeight: '900', fontSize: '24px' }}>STORE</span>
+          <span style={{ fontWeight: '900', fontSize: '24px' }} onClick={() => setPage('home')}>STORE</span>
         </div>
         <ul className="header__nav-menu">
           <li><a href="#" className="header__nav-link" onClick={() => setPage('home')}>OUR PRODUCTS</a></li>
@@ -16,8 +26,15 @@ export default function Header({ page, setPage, cartCount }) {
         </ul>
         <div className="header__actions">
           <div className="search-bar">
-            <input type="text" className="search-bar__input" placeholder="Search..." />
-            <button>🔍</button>
+            <input 
+              type="text" 
+              className="search-bar__input" 
+              placeholder="Search..." 
+              value={localQuery}
+              onChange={(e) => setLocalQuery(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            />
+            <button onClick={handleSearch}>🔍</button>
           </div>
           <span className="header__icon" onClick={() => setPage('auth')} style={{ cursor: 'pointer' }}>👤</span>
           <div className="cart-status" onClick={() => setPage('cart')} style={{ cursor: 'pointer' }}>
