@@ -1,7 +1,7 @@
 import '../styles/checkout.css';
 import { useState } from 'react';
 
-export default function CheckoutPage({ setPage }) {
+export default function CheckoutPage({ setPage, clearCart }) {
   const [fullName, setFullName] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
@@ -44,6 +44,7 @@ export default function CheckoutPage({ setPage }) {
 
       if (response.ok) {
         alert('Order placed successfully!');
+        if (clearCart) clearCart();
         setPage('home');
       } else {
         console.error("Failed to Checkout");

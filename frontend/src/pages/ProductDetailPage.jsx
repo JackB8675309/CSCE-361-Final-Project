@@ -1,7 +1,9 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import '../styles/product-detail.css';
 
-export default function ProductDetailPage({ product, setPage }) {
+export default function ProductDetailPage({ product, setPage, addToCart }) {
+    const [quantity, setQuantity] = useState(1);
+
 
     useEffect(() => {
         window.scrollTo(0, 0);  
@@ -54,8 +56,16 @@ export default function ProductDetailPage({ product, setPage }) {
                     </div>
 
                     <div className="actions">
-                        <input type="number" defaultValue="1" min="1" />
-                        <button className="btn-add-cart">Add to Cart</button>
+                        <input 
+                            type="number" 
+                            value={quantity} 
+                            min="1" 
+                            onChange={(e) => setQuantity(e.target.value)}
+                        />
+                        <button className="btn-add-cart" onClick={() => {
+                            addToCart(sampleProduct, quantity);
+                            alert(`${quantity} ${sampleProduct.name} added to cart!`);
+                        }}>Add to Cart</button>
                     </div>
 
                     <button 
