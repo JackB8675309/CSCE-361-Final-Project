@@ -17,10 +17,15 @@ public class CheckoutController : Controller {
             Order newOrder = userCart.Checkout(request.ShippingDetails, request.PaymentDetails);
             ClearUserCartInDatabase(request.UserId);
 
-            return RedirectToAction("OrderConfirmation", "Order", new { orderId = newOrder.orderID });
+            //The below line of code was written using Gemini 3.1 Pro on Google's AntiGravity
+            // The prompt was "does this class work with the react frontend?"
+            //The response was "Change 'return RedirectToAction("OrderConfirmation", "Order", new { orderId = newOrder.orderID });'
+            // to 'return Ok(new { success = true, orderId = newOrder.orderID });'
+
+            return Ok(new {success = true, orderId = newOrder.orderID});
         } catch (Exception e) {
             ModelState.AddModelError("", "An error occurred: " + e.Message);
-            return View("Index", request);
+            return Ok(new {success = false, error = e.Message});
         }
     }
 

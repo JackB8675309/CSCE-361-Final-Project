@@ -22,8 +22,8 @@ export default function App() {
       {page === 'auth' && <AuthPage setPage={setPage} />}
       {page === 'sale' && <SalePage setPage={setPage} setSelectedProduct={setSelectedProduct} />}
       {page === 'product' && <ProductDetailPage product={selectedProduct} setPage={setPage} />}
-      {page === 'checkout' && <CheckoutPage />}  
-      {page !== 'checkout' && <Footer />} 
+      {page === 'checkout' && <CheckoutPage setPage={setPage} />}
+      {page !== 'checkout' && <Footer />}
     </>
   );
 }
