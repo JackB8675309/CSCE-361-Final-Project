@@ -8,16 +8,16 @@ import AuthPage from './pages/AuthPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import SalePage from './pages/SalePage';
 import SearchPage from './pages/SearchPage';
+import CatalogPage from './pages/CatalogPage';
 
 export default function App() {
   const [page, setPage] = useState('home');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-
+  const [initialCategoryId, setInitialCategoryId] = useState(null);
 
   const [currentUserId, setCurrentUserId] = useState(null);
   const [cartItems, setCartItems] = useState([]);
-
 
   useEffect(() => {
     if (currentUserId) {
@@ -33,7 +33,6 @@ export default function App() {
   }, [currentUserId]);
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-
 
   const syncCartWithDatabase = (productId, quantity) => {
     if (!currentUserId) return;
@@ -102,11 +101,12 @@ export default function App() {
   return (
     <>
       <Header page={page} setPage={setPage} cartCount={cartCount} setSearchQuery={setSearchQuery} />
-      {page === 'home' && <HomePage setPage={setPage} setSelectedProduct={setSelectedProduct} />}
+      {page === 'home' && <HomePage setPage={setPage} setSelectedProduct={setSelectedProduct} setInitialCategoryId={setInitialCategoryId} />}
       {page === 'cart' && <CartPage setPage={setPage} cartItems={cartItems} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />}
       {page === 'auth' && <AuthPage setPage={setPage} setCurrentUserId={setCurrentUserId} />}
       {page === 'sale' && <SalePage setPage={setPage} setSelectedProduct={setSelectedProduct} />}
       {page === 'search' && <SearchPage setPage={setPage} setSelectedProduct={setSelectedProduct} searchQuery={searchQuery} />}
+      {page === 'catalog' && <CatalogPage setPage={setPage} setSelectedProduct={setSelectedProduct} initialCategoryId={initialCategoryId} />}
       {page === 'product' && <ProductDetailPage product={selectedProduct} setPage={setPage} addToCart={addToCart} />}
       {page === 'checkout' && <CheckoutPage setPage={setPage} clearCart={clearCart} />}
       {page !== 'checkout' && <Footer />}

@@ -1,44 +1,79 @@
+import { useState, useEffect } from 'react';
 import '../styles/global.css';
-import '../styles/homepage.css'; 
+import '../styles/homepage.css';
 import ProductCard from '../components/ProductCard';
 
+export default function HomePage({ setPage, setSelectedProduct, setInitialCategoryId }) {
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
 
+  useEffect(() => {
+    fetch('http://localhost:5000/product/sortByCategory')
+      .then(res => res.json())
+      .then(data => {
+        const formatted = data.slice(0, 6).map(p => ({
+          id: p.productID,
+          productID: p.productID,
+          name: p.name,
+          manufacturer: p.details?.manufactuer || "N/A",
+          category: p.details?.categoryID === 1 ? "New Arrivals" : p.details?.categoryID === 2 ? "On Sale" : "Summer Collection",
+          price: p.isOnSale && p.activePrice != null ? p.activePrice.toFixed(2) : p.price.toFixed(2),
+          oldPrice: p.isOnSale ? p.price.toFixed(2) : null,
+          sku: p.details?.sku || "N/A",
+          image: p.details?.imageUrl || "https://via.placeholder.com/300",
+          description: p.details?.description || "",
+          dimensions: p.details?.dimensions || "N/A",
+          weight: p.details?.weight ? `${p.details.weight} lbs` : "N/A",
+          rating: p.details?.rating ? `${p.details.rating}/5` : "N/A",
+          onSale: p.isOnSale
+        }));
+        setProducts(formatted);
+      })
+      .catch(console.error);
 
-// Dữ liệu tạm thời - sau này backend sẽ cung cấp dựa theo database của bạn
-const sampleProducts = [
-  { id: 1, name: "Sample Product 1", category: "Product Catalog", price: "120.00", oldPrice: "150.00", sku: "AB12345", image: "https://via.placeholder.com/300", onSale: true },
-  { id: 2, name: "Sample Product 2", category: "Product Catalog", price: "80.00", oldPrice: null,     sku: "AB12346", image: "https://via.placeholder.com/300", onSale: false },
-  { id: 3, name: "Sample Product 3", category: "Product Catalog", price: "200.00", oldPrice: "250.00", sku: "AB12347", image: "https://via.placeholder.com/300", onSale: true },
-  { id: 4, name: "Sample Product 4", category: "Product Catalog", price: "60.00", oldPrice: null,     sku: "AB12348", image: "https://via.placeholder.com/300", onSale: false },
-  { id: 5, name: "Sample Product 5", category: "Product Catalog", price: "95.00", oldPrice: "110.00", sku: "AB12349", image: "https://via.placeholder.com/300", onSale: true },
-  { id: 6, name: "Sample Product 6", category: "Product Catalog", price: "45.00", oldPrice: null,     sku: "AB12350", image: "https://via.placeholder.com/300", onSale: false },
-];
+    // Fetch actual categories (catalogs)
+    fetch('http://localhost:5000/product/categories')
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(console.error);
+  }, []);
 
-export default function HomePage({ setPage , setSelectedProduct }) {
+  const goToCatalog = (catId) => {
+    setInitialCategoryId(catId);
+    setPage('catalog');
+  };
+
   return (
     <main className="main-content">
       {/* Hero Section */}
       <section className="hero">
         <div className="hero__container">
           <h2 className="hero__title">SUMMER COLLECTION</h2>
-          <p className="hero__subtitle">New arrivals from our latest collection are here.</p>
+          <p className="hero__subtitle">Discover our catalogs below</p>
           <div className="hero__actions">
-            <button className="btn--hero--shop-action">SHOP CATALOG 1</button>
-            <button className="btn--hero--shop-action">SHOP CATALOG 2</button>
+            {categories.map(cat => (
+              <button
+                key={cat.categoryID}
+                className="btn--hero--shop-action"
+                onClick={() => goToCatalog(cat.categoryID)}
+              >
+                SHOP {cat.name.toUpperCase()}
+              </button>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Product Catalog Section */}
       <section className="catalog">
-        <h3 className="catalog__title">NEW ARRIVALS</h3>
+        <h3 className="catalog__title">FEATURED PRODUCTS</h3>
         <div className="catalog__grid">
-          {sampleProducts.map(product => (
-            <ProductCard 
-            key={product.id} 
-            product={product}
-            setPage={setPage}
-            setSelectedProduct={setSelectedProduct} 
+          {products.map(product => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              setPage={setPage}
+              setSelectedProduct={setSelectedProduct}
             />
           ))}
         </div>

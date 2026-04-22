@@ -146,4 +146,29 @@ public class ProductController : ControllerBase {
             return BadRequest(new { message = "Database error", error = e.Message });
         }
     }
+
+    // GET /product/categories
+    [HttpGet("categories")]
+    public ActionResult GetCategories() {
+        List<object> categories = new List<object>();
+        try {
+            using (DatabaseConnection database = new DatabaseConnection()) {
+                SqlConnection conn = database.OpenConnection();
+                string query = "SELECT * FROM category";
+                using (SqlCommand command = new SqlCommand(query, conn)) {
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        while (reader.Read()) {
+                            categories.Add(new {
+                                categoryID = Convert.ToInt32(reader["categoryID"]),
+                                name = reader["name"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return Ok(categories);
+        } catch (SqlException e) {
+            return BadRequest(new { message = "Database error", error = e.Message });
+        }
+    }
 }

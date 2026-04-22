@@ -14,6 +14,9 @@ public class Product {
         this.details = details;
     }
 
+    public bool isOnSale { get { return IsOnSale(); } }
+    public double activePrice { get { return GetActivePrice(); } }
+
     public bool IsOnSale() {
         return GetActivePrice() < this.price;
     }

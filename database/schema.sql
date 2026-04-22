@@ -1,3 +1,11 @@
+DROP TABLE IF EXISTS OrderItems;
+DROP TABLE IF EXISTS Orders;
+DROP TABLE IF EXISTS Sale;
+DROP TABLE IF EXISTS cart;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS category;
+DROP TABLE IF EXISTS users;
+
 CREATE Table users (
 	userID int IDENTITY(1,1) PRIMARY KEY,
 	email varchar(255) NOT NULL,
@@ -65,3 +73,4 @@ CREATE Table OrderItems (
 	FOREIGN KEY (orderID) references Orders(orderID),
 	FOREIGN KEY (productID) references product(productID)
 );
+

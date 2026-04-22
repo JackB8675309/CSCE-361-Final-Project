@@ -21,7 +21,7 @@ export default function Header({ page, setPage, cartCount, setSearchQuery }) {
           <span style={{ fontWeight: '900', fontSize: '24px' }} onClick={() => setPage('home')}>STORE</span>
         </div>
         <ul className="header__nav-menu">
-          <li><a href="#" className="header__nav-link" onClick={() => setPage('home')}>OUR PRODUCTS</a></li>
+          <li><a href="#" className="header__nav-link" onClick={(e) => { e.preventDefault(); setPage('catalog'); }}>OUR PRODUCTS</a></li>
           <li><a href="#" className="header__nav-link header__nav-link--sale" onClick={(e) => { e.preventDefault(); setPage('sale'); }}>SALE</a></li>
         </ul>
         <div className="header__actions">

@@ -27,11 +27,17 @@ export default function SearchPage({ setPage, setSelectedProduct, searchQuery })
             id: p.productID,
             productID: p.productID,
             name: p.name,
+            manufacturer: p.details?.manufactuer || "N/A",
             category: "Search Results", // Defaulting for search results
-            price: p.price.toFixed(2),
+            price: p.isOnSale && p.activePrice != null ? p.activePrice.toFixed(2) : p.price.toFixed(2),
+            oldPrice: p.isOnSale ? p.price.toFixed(2) : null,
             sku: p.details?.sku || "N/A",
             image: p.details?.imageUrl || "https://via.placeholder.com/300",
-            onSale: p.isOnSale // Might not be populated correctly without GetActivePrice on frontend, but keeping structure
+            description: p.details?.description || "",
+            dimensions: p.details?.dimensions || "N/A",
+            weight: p.details?.weight ? `${p.details.weight} lbs` : "N/A",
+            rating: p.details?.rating ? `${p.details.rating}/5` : "N/A",
+            onSale: p.isOnSale 
         }));
         setProducts(formattedData);
         setLoading(false);

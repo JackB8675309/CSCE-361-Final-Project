@@ -21,7 +21,7 @@ export default function ProductDetailPage({ product, setPage, addToCart }) {
         sku: "AB12345",
         dimensions: "12x5x4 inches",
         weight: "1.5 lbs",
-        rating: "4.5/5 ⭐",
+        rating: "4.5/5",
         image: "https://via.placeholder.com/500"
     };
 
@@ -38,8 +38,11 @@ export default function ProductDetailPage({ product, setPage, addToCart }) {
 
                     <div className="price-section">
                         <span className="price-current">${sampleProduct.price}</span>
+                        {sampleProduct.oldPrice && (
+                            <span className="price-old">${sampleProduct.oldPrice}</span>
+                        )}
                         {sampleProduct.onSale && (
-                            <span className="badge badge--sale">{sampleProduct.saleAmount}</span>
+                            <span className="badge badge--sale">SALE</span>
                         )}
                     </div>
 
