@@ -36,7 +36,7 @@ public class ProductController : ControllerBase {
                 SqlConnection conn = database.OpenConnection();
                 string query = "SELECT * FROM product WHERE categoryID = @categoryID";
                 using (SqlCommand command = new SqlCommand(query, conn)) {
-                    command.Parameters.AddWithValue("@categoryID", categoryID);
+                    command.Parameters.Add("@categoryID", System.Data.SqlDbType.Int).Value = categoryID;
                     using (SqlDataReader reader = command.ExecuteReader()) {
                         while (reader.Read()) {
                             products.Add(BuildProduct(reader));
@@ -86,22 +86,27 @@ public class ProductController : ControllerBase {
                 SqlConnection conn = database.OpenConnection();
                 // Get products on sale either by productID or by categoryID, active sales only
                 string query = @"
-                    SELECT p.*, s.saleID, s.discountAmount, s.startDate, s.endDate
+                    SELECT p.*, s.saleID, s.discountAmount, s.discountPercentage, s.startDate, s.endDate
                     FROM product p
                     JOIN Sale s ON (s.productID = p.productID OR s.categoryID = p.categoryID)
                     WHERE s.startDate <= GETDATE() AND s.endDate >= GETDATE()
-                    ORDER BY s.discountAmount DESC";
+                    ORDER BY COALESCE(s.discountAmount, p.price * (s.discountPercentage / 100.0)) DESC";
                 using (SqlCommand command = new SqlCommand(query, conn)) {
                     using (SqlDataReader reader = command.ExecuteReader()) {
                         while (reader.Read()) {
                             Product product = BuildProduct(reader);
-                            double discount = Convert.ToDouble(reader["discountAmount"]);
+                            double discount = 0;
+                            if (reader["discountAmount"] != DBNull.Value) {
+                                discount = Convert.ToDouble(reader["discountAmount"]);
+                            } else if (reader["discountPercentage"] != DBNull.Value) {
+                                discount = product.price * (Convert.ToDouble(reader["discountPercentage"]) / 100.0);
+                            }
                             double salePrice = product.price - discount;
 
                             saleProducts.Add(new {
                                 product = product,
                                 saleID = Convert.ToInt32(reader["saleID"]),
-                                discountAmount = discount,
+                                discountAmount = Math.Round(discount, 2),
                                 salePrice = Math.Round(salePrice, 2),
                                 startDate = reader["startDate"].ToString(),
                                 endDate = reader["endDate"].ToString()
@@ -111,6 +116,32 @@ public class ProductController : ControllerBase {
                 }
             }
             return Ok(saleProducts);
+        } catch (SqlException e) {
+            return BadRequest(new { message = "Database error", error = e.Message });
+        }
+    }
+
+    [HttpGet("search")]
+    public ActionResult SearchProducts([FromQuery] string q) {
+        List<Product> products = new List<Product>();
+        if (string.IsNullOrWhiteSpace(q)) {
+            return Ok(products);
+        }
+
+        try {
+            using (DatabaseConnection database = new DatabaseConnection()) {
+                SqlConnection conn = database.OpenConnection();
+                string query = "SELECT * FROM product WHERE name LIKE @query OR description LIKE @query";
+                using (SqlCommand command = new SqlCommand(query, conn)) {
+                    command.Parameters.Add("@query", System.Data.SqlDbType.NVarChar).Value = "%" + q + "%";
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        while (reader.Read()) {
+                            products.Add(BuildProduct(reader));
+                        }
+                    }
+                }
+            }
+            return Ok(products);
         } catch (SqlException e) {
             return BadRequest(new { message = "Database error", error = e.Message });
         }

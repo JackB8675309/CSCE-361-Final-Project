@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -7,23 +7,109 @@ import CheckoutPage from './pages/CheckoutPage';
 import AuthPage from './pages/AuthPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import SalePage from './pages/SalePage';
-
+import SearchPage from './pages/SearchPage';
 
 export default function App() {
   const [page, setPage] = useState('home');
-  const [cartCount, setCartCount] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
+
+
+  useEffect(() => {
+    if (currentUserId) {
+      fetch('http://localhost:5000/Cart', { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) setCartItems(data);
+        })
+        .catch(console.error);
+    } else {
+      setCartItems([]);
+    }
+  }, [currentUserId]);
+
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+
+  const syncCartWithDatabase = (productId, quantity) => {
+    if (!currentUserId) return;
+
+    fetch('http://localhost:5000/Cart/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        productId: productId,
+        quantity: quantity
+      })
+    }).catch(console.error);
+  };
+
+  const addToCart = (product, quantity = 1) => {
+    if (!currentUserId) {
+      alert("Please login to add to cart!");
+      setPage('auth');
+      return;
+    }
+
+    setCartItems(prev => {
+      const existing = prev.find(item => item.productID === product.productID || item.sku === product.sku);
+      const newQuantity = existing ? existing.quantity + parseInt(quantity, 10) : parseInt(quantity, 10);
+      const productIDToUse = existing?.productID || product.productID || 1; // Fallback if missing
+
+      syncCartWithDatabase(productIDToUse, newQuantity);
+
+      if (existing) {
+        return prev.map(item => (item.productID === product.productID || item.sku === product.sku) ? { ...item, quantity: newQuantity } : item);
+      }
+      return [...prev, { ...product, quantity: newQuantity, productID: productIDToUse }];
+    });
+  };
+
+  const updateQuantity = (skuOrId, quantity) => {
+    const qty = parseInt(quantity, 10);
+    const itemToUpdate = cartItems.find(item => item.productID === skuOrId || item.sku === skuOrId);
+    if (!itemToUpdate) return;
+
+    if (qty <= 0) {
+      removeFromCart(skuOrId);
+      return;
+    }
+
+    syncCartWithDatabase(itemToUpdate.productID, qty);
+    setCartItems(prev => prev.map(item => (item.productID === skuOrId || item.sku === skuOrId) ? { ...item, quantity: qty } : item));
+  };
+
+  const removeFromCart = (skuOrId) => {
+    const itemToRemove = cartItems.find(item => item.productID === skuOrId || item.sku === skuOrId);
+    if (itemToRemove) {
+      syncCartWithDatabase(itemToRemove.productID, 0);
+    }
+    setCartItems(prev => prev.filter(item => item.productID !== skuOrId && item.sku !== skuOrId));
+  };
+
+  const clearCart = () => {
+    if (currentUserId) {
+      fetch('http://localhost:5000/Cart/clear', { method: 'DELETE', credentials: 'include' }).catch(console.error);
+    }
+    setCartItems([]);
+  };
 
   return (
     <>
-      <Header page={page} setPage={setPage} cartCount={cartCount} />
+      <Header page={page} setPage={setPage} cartCount={cartCount} setSearchQuery={setSearchQuery} />
       {page === 'home' && <HomePage setPage={setPage} setSelectedProduct={setSelectedProduct} />}
-      {page === 'cart' && <CartPage setPage={setPage} />}
-      {page === 'auth' && <AuthPage setPage={setPage} />}
+      {page === 'cart' && <CartPage setPage={setPage} cartItems={cartItems} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />}
+      {page === 'auth' && <AuthPage setPage={setPage} setCurrentUserId={setCurrentUserId} />}
       {page === 'sale' && <SalePage setPage={setPage} setSelectedProduct={setSelectedProduct} />}
-      {page === 'product' && <ProductDetailPage product={selectedProduct} setPage={setPage} />}
-      {page === 'checkout' && <CheckoutPage />}  
-      {page !== 'checkout' && <Footer />} 
+      {page === 'search' && <SearchPage setPage={setPage} setSelectedProduct={setSelectedProduct} searchQuery={searchQuery} />}
+      {page === 'product' && <ProductDetailPage product={selectedProduct} setPage={setPage} addToCart={addToCart} />}
+      {page === 'checkout' && <CheckoutPage setPage={setPage} clearCart={clearCart} />}
+      {page !== 'checkout' && <Footer />}
     </>
   );
 }

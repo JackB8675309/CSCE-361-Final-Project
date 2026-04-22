@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import '../styles/auth.css';
 
-export default function AuthPage({ setPage }) {
+export default function AuthPage({ setPage, setCurrentUserId }) {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -29,6 +29,7 @@ export default function AuthPage({ setPage }) {
         fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
             body: JSON.stringify({ email: email, password: password })
         })
             .then(response => {
@@ -39,7 +40,10 @@ export default function AuthPage({ setPage }) {
                 return response.json();
             })
             .then(data => {
-                alert(data.message); // Tell the user it worked!
+                alert(data.message);
+                if (data.userId) {
+                    setCurrentUserId(data.userId);
+                }
                 setPage('home'); // Now send them home
             })
             .catch(err => {
