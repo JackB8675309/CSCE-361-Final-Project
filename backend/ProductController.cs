@@ -198,4 +198,26 @@ public class ProductController : ControllerBase {
             return BadRequest(new { message = "Database error", error = e.Message });
         }
     }
+
+    [HttpGet("{id}")]
+    public ActionResult GetProductById(int id) {
+        try {
+            using (DatabaseConnection database = new DatabaseConnection()) {
+                SqlConnection conn = database.OpenConnection();
+                string query = "SELECT * FROM product WHERE productID = @productID";
+                using (SqlCommand command = new SqlCommand(query, conn)) {
+                    command.Parameters.Add("@productID", System.Data.SqlDbType.Int).Value = id;
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        if (reader.Read()) {
+                            return Ok(BuildProduct(reader));
+                        }
+                    }
+                }
+            }
+            return NotFound(new { message = "Product not found" });
+        } catch (SqlException e) {
+            return BadRequest(new { message = "Database error", error = e.Message });
+        }
+    }
 }
+

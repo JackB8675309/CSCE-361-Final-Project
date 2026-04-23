@@ -28,7 +28,8 @@ SET IDENTITY_INSERT Sale ON;
 INSERT INTO Sale (saleID, startDate, endDate, discountAmount, discountPercentage, categoryID, productID) VALUES
 (1, '04-21-2026', '09-20-2026', 15, NULL, NULL, 2),
 (2, '04-20-2026', '05-20-2026', 5, NULL, 2, 5),
-(3, '01-01-2026', '01-01-2027', NULL, 50, NULL, 7);
+(3, '01-01-2026', '01-01-2027', NULL, 50, NULL, 7),
+(4, '01-01-2023', '12-31-2023', 10, NULL, NULL, 2);
 SET IDENTITY_INSERT Sale OFF;
 
 SET IDENTITY_INSERT cart ON;

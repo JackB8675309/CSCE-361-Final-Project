@@ -11,6 +11,11 @@ public class CheckoutController : Controller {
         int? sessionUserId = HttpContext.Session.GetInt32("userId");
         if (sessionUserId == null) return Unauthorized(new { success = false, error = "User is not logged in" });
         int userId = sessionUserId.Value;
+        
+        if (string.IsNullOrWhiteSpace(request.ShippingDetails) || string.IsNullOrWhiteSpace(request.PaymentDetails) ||
+            request.ShippingDetails.Length > 500 || request.PaymentDetails.Length > 500) {
+            return BadRequest(new { success = false, error = "Shipping and Payment details are required and must be under 500 characters." });
+        }
 
         try {
             Cart userCart = RetrieveCartForUser(userId);

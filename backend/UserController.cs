@@ -12,6 +12,10 @@ using System;
 public class UserController : ControllerBase {
     [HttpPost("login")]
     public ActionResult Login([FromBody] AuthRequest request) {
+        if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password)) {
+            return BadRequest(new { message = "Email and Password are required." });
+        }
+
         Users userModel = new Users(0, "", "");
         bool loginSuccess = userModel.login(request.Email, request.Password);
         if (loginSuccess){
@@ -30,6 +34,11 @@ public class UserController : ControllerBase {
     
     [HttpPost("create-account")]
     public ActionResult CreateAccount([FromBody] AuthRequest request){
+        if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password) ||
+            request.Email.Length > 255 || request.Password.Length > 255) {
+            return BadRequest(new { message = "Email and Password are required and must be under 255 characters." });
+        }
+
         try {
             Users userModel = new Users(0, "", "");
             userModel.createAccount(request.Email, request.Password);
@@ -38,4 +47,4 @@ public class UserController : ControllerBase {
             return BadRequest(new { message = "Failed to create account", error = e.Message });
         }
     }
-}
+}
