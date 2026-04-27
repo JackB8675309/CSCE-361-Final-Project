@@ -107,7 +107,15 @@ export default function App() {
 
   return (
     <>
-      <Header page={page} setPage={setPage} cartCount={cartCount} setSearchQuery={setSearchQuery} setInitialCategoryId={setInitialCategoryId} />
+      <Header 
+        page={page} 
+        setPage={setPage} 
+        cartCount={cartCount} 
+        setSearchQuery={setSearchQuery} 
+        setInitialCategoryId={setInitialCategoryId}
+        currentUserId={currentUserId}
+        setCurrentUserId={setCurrentUserId}
+      />
 
       {notification && (
         <div className={`notification-toast ${notification.type}`}>
