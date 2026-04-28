@@ -36,6 +36,15 @@
     color: #e44d26;
 }
 
+.price-old {
+    text-decoration: line-through;
+    text-decoration-color: red;
+    text-decoration-thickness: 3px;
+    color: #767677;
+    font-size: 1.2rem;
+    margin-left: 15px;
+}
+
 .specs {
     background: #f9f9f9;
     padding: 20px;

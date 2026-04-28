@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Header from './components/Header';
-import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
@@ -108,7 +107,15 @@ export default function App() {
 
   return (
     <>
-      <Header page={page} setPage={setPage} cartCount={cartCount} setSearchQuery={setSearchQuery} setInitialCategoryId={setInitialCategoryId} />
+      <Header 
+        page={page} 
+        setPage={setPage} 
+        cartCount={cartCount} 
+        setSearchQuery={setSearchQuery} 
+        setInitialCategoryId={setInitialCategoryId}
+        currentUserId={currentUserId}
+        setCurrentUserId={setCurrentUserId}
+      />
 
       {notification && (
         <div className={`notification-toast ${notification.type}`}>
@@ -124,7 +131,6 @@ export default function App() {
       {page === 'catalog' && <CatalogPage setPage={setPage} setSelectedProduct={setSelectedProduct} initialCategoryId={initialCategoryId} />}
       {page === 'product' && <ProductDetailPage product={selectedProduct} setPage={setPage} addToCart={addToCart} />}
       {page === 'checkout' && <CheckoutPage setPage={setPage} clearCart={clearCart} showNotification={showNotification} />}
-      {page !== 'checkout' && <Footer />}
     </>
   );
 }

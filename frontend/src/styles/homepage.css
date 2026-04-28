@@ -9,7 +9,7 @@
 }
 
 body {
-    min-height: 200vh; 
+    min-height: 200vh;
     line-height: 1.6;
     background-color: #ffffff;
 }
@@ -64,7 +64,8 @@ body {
 }
 
 .header__nav-link--sale {
-    color: #ff0000; /* Requirement: Highlight sales [cite: 24] */
+    color: #ff0000;
+    /* Requirement: Highlight sales [cite: 24] */
 }
 
 /* SEARCH COMPONENT TRONG HEADER */
@@ -121,7 +122,8 @@ body {
    ========================================================================== */
 .hero {
     height: 70vh;
-    background-color: #212529; /* Placeholder cho banner */
+    background-color: #212529;
+    /* Placeholder cho banner */
     display: flex;
     align-items: center;
     color: white;
@@ -175,7 +177,7 @@ body {
 .catalog__grid {
     display: flex;
     gap: 25px;
-    overflow-x: auto;          
+    overflow-x: auto;
     scroll-snap-type: x mandatory;
     padding-bottom: 15px;
 }
@@ -184,7 +186,7 @@ body {
 .product-card {
     border: 1px solid transparent;
     transition: 0.3s;
-    flex: 0 0 280px;           
+    flex: 0 0 280px;
     scroll-snap-align: start;
 }
 
@@ -238,6 +240,8 @@ body {
 
 .price--old {
     text-decoration: line-through;
+    text-decoration-color: red;
+    text-decoration-thickness: 4px;
     color: #767677;
     font-size: 14px;
     margin-left: 10px;
