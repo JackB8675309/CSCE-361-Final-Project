@@ -21,7 +21,10 @@ INSERT INTO product (productID, sku, name, description, manufacturer, weight, ra
 (4, 'AW2006', 'Sneakers', 'An everyday classic to get you from point A to point B, with new foam technology', 'Nike', 5, 4.9, '12x8x3', 90.00, 'https://images.unsplash.com/photo-1603787081207-362bcef7c144?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 1),
 (5, 'SH4003', 'White Socks', 'Tight fit, knit socks perfect for everyday use', 'Kirkland', 1, 4.5, '8x5x3', 15.00, 'https://plus.unsplash.com/premium_photo-1727286320353-815a792ca2da?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 2),
 (6, 'SH4004', 'Sunglasses', 'UV Protection Sunglasses, perfect for sunny days', 'Rayban', 2, 4.8, '1x1x.5', 40.00, 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 2),
-(7, 'AW2009', 'Leather Belt', '100% All-leater belt', 'GAP', 3, 4.5, '30x2x1', 20.99, 'https://images.unsplash.com/photo-1666723043169-22e29545675c?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 2);
+(7, 'AW2009', 'Leather Belt', '100% All-leater belt', 'GAP', 3, 4.5, '30x2x1', 20.99, 'https://images.unsplash.com/photo-1666723043169-22e29545675c?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 2),
+(8, 'SU3001', 'Baseball Cap', 'Adjustable structured cap with curved brim, perfect for sunny days', 'New Era', 1, 4.3, '8x8x5', 25.00, 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=300&auto=format&fit=crop', 3),
+(9, 'AW3002', 'Denim Jacket 2', 'Classic stonewashed denim jacket with button front closure and chest pockets', 'Levis', 3, 4.7, '18x14x2', 65.00, 'https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=300&auto=format&fit=crop', 1),
+(10, 'SU3003', 'Swim Trunks', 'Quick-dry board shorts with elastic waistband and side pockets', 'Speedo', 1, 4.4, '8x6x2', 30.00, 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=300&auto=format&fit=crop', 3);
 SET IDENTITY_INSERT product OFF;
 
 SET IDENTITY_INSERT Sale ON;
