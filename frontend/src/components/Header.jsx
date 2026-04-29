@@ -25,9 +25,6 @@ export default function Header({ page, setPage, cartCount, setSearchQuery, setIn
 
   return (
     <header className="header">
-      <div className="header__top-bar">
-        <span>FREE SHIPPING FOR MEMBERS</span>
-      </div>
       <nav className="header__navbar">
         <div className="header__logo">
           <span style={{ fontWeight: '900', fontSize: '24px', cursor: 'pointer' }} onClick={() => setPage('home')}>STORE</span>
@@ -40,7 +37,7 @@ export default function Header({ page, setPage, cartCount, setSearchQuery, setIn
               onClick={() => setPage('catalog')}
               style={{ background: 'none', border: 'none', padding: 0, font: 'inherit', color: 'inherit', cursor: 'pointer' }}
             >
-              OUR PRODUCTS
+              ALL PRODUCTS
             </button>
           </li>
           <li>
@@ -48,7 +45,7 @@ export default function Header({ page, setPage, cartCount, setSearchQuery, setIn
               type="button"
               className="header__nav-link header__nav-link--sale"
               onClick={() => { setInitialCategoryId(2); setPage('catalog'); }}
-              style={{ background: 'none', border: 'none', padding: 0, font: 'inherit', color: 'inherit', cursor: 'pointer' }}
+              style={{ background: 'none', border: 'none', padding: 0, font: 'inherit', cursor: 'pointer' }}
             >
               SALE
             </button>

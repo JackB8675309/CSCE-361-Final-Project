@@ -1,6 +1,11 @@
 using System;
 using System.Collections.Generic;
 
+/*
+* Class used to represent a user's shopping cart.
+* Keeps track of items in cart, individual item totals,
+* grand totals, item quantity, and handles checkout.
+*/
 public class Cart {
     public int cartID {get; set;}
     public int userID {get; set;}
@@ -27,6 +32,10 @@ public class Cart {
         quantity--;
     }
 
+    /*
+    * Method to checkout an existing cart
+    * Includes error to make sure empty carts can't be checked out
+    */
     public Order Checkout(string shippingDetails, string paymentDetails){
         if (this.products.Count == 0){
             throw new InvalidOperationException("Your cart is empty, add something to checkout");
