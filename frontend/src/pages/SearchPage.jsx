@@ -69,6 +69,8 @@ export default function SearchPage({ setPage, setSelectedProduct, searchQuery })
         setError("Could not load search results.");
         setLoading(false);
       });
+    // sortBy is intentionally excluded; a dedicated effect re-sorts when it changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, categories]);
 
   useEffect(() => {
