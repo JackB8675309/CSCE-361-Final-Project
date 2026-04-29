@@ -49,12 +49,13 @@ body {
 .header__nav-menu {
     display: flex;
     list-style: none;
+    gap: 30px;
 }
 
 .header__nav-link {
     text-decoration: none;
     color: black;
-    font-weight: bold;
+    font-weight: 900;
     padding: 10px 15px;
     transition: 0.3s;
 }
@@ -241,7 +242,7 @@ body {
 .price--old {
     text-decoration: line-through;
     text-decoration-color: red;
-    text-decoration-thickness: 4px;
+    text-decoration-thickness: 3px;
     color: #767677;
     font-size: 14px;
     margin-left: 10px;

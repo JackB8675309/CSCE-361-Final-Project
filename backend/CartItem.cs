@@ -1,3 +1,6 @@
+/*
+* Model that represents the items in a shopping cart.
+*/
 public class CartItem {
     public int productID { get; set; }
     public string sku { get; set; }

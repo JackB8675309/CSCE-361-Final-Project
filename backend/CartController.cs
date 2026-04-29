@@ -3,6 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
+/*
+* Data Transfer Object that sends Cart Items to frontend.
+* Holds everything needed for the individual display page
+*/
 public class CartItemDto {
     public int productID { get; set; }
     public string sku { get; set; }
@@ -12,11 +16,19 @@ public class CartItemDto {
     public int quantity { get; set; }
 }
 
-
+/*
+* Handles the HTTP requests for user's shopping cart.
+* Fetches, updates, and clears cart data directly from the database.
+*/
 [ApiController]
 [Route("[controller]")]
 public class CartController : ControllerBase {
 
+    /*
+    * Retrieves current user's cart
+    * Checks if the user is logged in, then queries the database
+    * for their cart items and then calculates the grand total
+    */
     [HttpGet]
     public ActionResult GetCart() {
         int? userId = HttpContext.Session.GetInt32("userId");
@@ -65,6 +77,13 @@ public class CartController : ControllerBase {
         }
     }
 
+    /*
+    * Updates the quantity of a product in the user's cart
+    * Checks if the user is logged in,
+    * then checks if the item is already in the cart
+    * then it either updates the quantity, deletes the item,
+    * or increases/decreases the item quantity
+    */
     [HttpPost("update")]
     public ActionResult UpdateCartRow([FromBody] CartRequest request) {
         int? sessionUserId = HttpContext.Session.GetInt32("userId");
@@ -120,6 +139,10 @@ public class CartController : ControllerBase {
         }
     }
 
+    /*
+    * Completely empties the user's cart and deletes everything
+    * tied to the cart
+    */
     [HttpDelete("clear")]
     public ActionResult ClearCart() {
         int? sessionUserId = HttpContext.Session.GetInt32("userId");
