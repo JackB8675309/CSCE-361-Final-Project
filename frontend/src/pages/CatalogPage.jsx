@@ -71,6 +71,8 @@ export default function CatalogPage({ setPage, setSelectedProduct, initialCatego
                 console.error("Error fetching products:", err);
                 setLoading(false);
             });
+        // sortBy is intentionally excluded; a dedicated effect re-sorts when it changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedCategoryId, categories]);
 
     useEffect(() => {

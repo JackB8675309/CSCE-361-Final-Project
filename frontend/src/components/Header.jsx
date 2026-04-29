@@ -33,8 +33,26 @@ export default function Header({ page, setPage, cartCount, setSearchQuery, setIn
           <span style={{ fontWeight: '900', fontSize: '24px', cursor: 'pointer' }} onClick={() => setPage('home')}>STORE</span>
         </div>
         <ul className="header__nav-menu">
-          <li><a href="#" className="header__nav-link" onClick={(e) => { e.preventDefault(); setPage('catalog'); }}>OUR PRODUCTS</a></li>
-          <li><a href="#" className="header__nav-link header__nav-link--sale" onClick={(e) => { e.preventDefault(); setInitialCategoryId(2); setPage('catalog'); }}>SALE</a></li>
+          <li>
+            <button
+              type="button"
+              className="header__nav-link"
+              onClick={() => setPage('catalog')}
+              style={{ background: 'none', border: 'none', padding: 0, font: 'inherit', color: 'inherit', cursor: 'pointer' }}
+            >
+              OUR PRODUCTS
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              className="header__nav-link header__nav-link--sale"
+              onClick={() => { setInitialCategoryId(2); setPage('catalog'); }}
+              style={{ background: 'none', border: 'none', padding: 0, font: 'inherit', color: 'inherit', cursor: 'pointer' }}
+            >
+              SALE
+            </button>
+          </li>
         </ul>
         <div className="header__actions">
           <div className="search-bar">

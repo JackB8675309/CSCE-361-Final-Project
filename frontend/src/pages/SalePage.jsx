@@ -51,7 +51,6 @@ const Countdown = ({ endDate }) => {
 
 export default function SalePage({ setPage, setSelectedProduct }) {
     const [sales, setSales] = useState([]);
-    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -61,8 +60,6 @@ export default function SalePage({ setPage, setSelectedProduct }) {
         fetch('http://localhost:5000/product/categories')
             .then(res => res.json())
             .then(catData => {
-                setCategories(catData);
-
                 return fetch('http://localhost:5000/product/onSale')
                     .then(res => res.json())
                     .then(data => {
